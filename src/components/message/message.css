@@ -1,0 +1,53 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.messageTop {
+  display: flex;
+}
+
+.messageImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.messageText {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgb(245, 241, 241);
+  color: black;
+  max-width: 300px;
+  word-break: break-word;
+}
+.massafeTextAndSeen {
+  position: relative;
+}
+
+.massafeTextAndSeen img {
+  width: 12px;
+  height: 12px;
+  border-radius: 50px;
+  /* position: absolute; */
+  /* top: 38px; */
+  /* right: -3px; */
+  border: black 1px solid;
+}
+
+.messageBottom {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.message.own {
+  align-items: flex-end;
+}
+
+.message.own .messageText {
+  background-color: #1877f2;
+  color: black;
+}
