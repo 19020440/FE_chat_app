@@ -31,9 +31,13 @@ export class AuthStore {
     this.socket = data;
   }
 
-  async action_login(data) {
-    const DOMAIN = `${serviceUrls.SERVICE_URL}/session`;
-    const result = await Request.post(data, DOMAIN);
+  async action_login(username, password) {
+    const apiUrl = `${serviceUrls.SERVICE_URL}/session`;
+    const apiBody = {
+      username,
+      password,
+    }
+    const result = await Request.post(apiBody, apiUrl);
 
     if (result) {
       this.user = result.content;

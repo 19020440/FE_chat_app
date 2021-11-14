@@ -15,10 +15,10 @@ const Login = observer(() => {
   const history = useHistory();
   const handleClick = async (e) => {
     e.preventDefault();
-    const result = await AuthStore.action_login({
-      username: username.current.value,
-      password: password.current.value,
-    });
+    const result = await AuthStore.action_login(
+      username.current.value,
+      password.current.value,
+    );
     if (result) history.push(routes.MESSENGER);
   };
 
