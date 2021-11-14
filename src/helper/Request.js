@@ -24,12 +24,14 @@ export const Request = {
       const result = await api.post(url, data).then(resp => resp.data);
 
       if (result.success) {
-        return result.data;
+        return true;
       } else {
-        showMessageError(result.message);
+        showMessageError('Tạo tài khoản thất bại');
+        return false;
       }
     } catch (err) {
       showMessageError(err.message);
+      return false;
     }
   },
 

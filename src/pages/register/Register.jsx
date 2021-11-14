@@ -11,22 +11,24 @@ const Register = observer(() => {
   const email = useRef();
   const password = useRef();
   const passwordAgain = useRef();
-  const history = useHistory();
-  const AuthStore = useStore('AuthStore');
 
+  const AuthStore = useStore('AuthStore');
+  const history = useHistory();
+  
   const handleClick = async (e) => {
     e.preventDefault();
     if (passwordAgain.current.value !== password.current.value) {
       passwordAgain.current.setCustomValidity("Passwords don't match!");
-    } else {
-      const user = {
-        username: username.current.value,
-        email: email.current.value,
-        password: password.current.value,
-      };
-      const result = await AuthStore.action_register(user);
-      result && history.push(routes.LOGIN);
-    }
+      return;
+    } 
+
+    const user = {
+      username: username.current.value,
+      password: password.current.value,
+      email: email.current.value,
+    };
+    const result = await AuthStore.action_register(user);
+    result && history.push(routes.LOGIN);
   };
 
   return (
@@ -67,6 +69,7 @@ const Register = observer(() => {
               ref={passwordAgain}
               className="loginInput"
               type="password"
+              minLength="6"
             />
             <button className="loginButton" type="submit">
               Sign Up
