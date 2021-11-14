@@ -6,6 +6,7 @@ import Loading from './components/loading/Loading';
 import PrRouter from './pages/PrRouter';
 import { loginStatuses } from './constants/configValues';
 import { useStore } from './hook';
+import 'antd/dist/antd.css';
 
 const App = observer(() => {
   const AuthStore = useStore('AuthStore');

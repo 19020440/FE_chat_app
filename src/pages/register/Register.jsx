@@ -41,7 +41,7 @@ const Register = observer(() => {
           </span>
         </div>
         <div className="loginRight">
-          <form className="loginBox" onSubmit={handleClick}>
+          <form className="loginBox">
             <input
               placeholder="Username"
               required
@@ -71,13 +71,13 @@ const Register = observer(() => {
               type="password"
               minLength="6"
             />
-            <button className="loginButton" type="submit">
+            <button className="loginButton" type="submit" onClick={handleClick}>
               Sign Up
             </button>
-            <button className="loginRegisterButton">
-              <Link to="/login">Log into Account</Link>
-            </button>
           </form>
+          <button className="loginRegisterButton">
+            <Link to="/login">Log into Account</Link>
+          </button>
         </div>
       </div>
     </div>

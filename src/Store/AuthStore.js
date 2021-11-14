@@ -19,9 +19,9 @@ export class AuthStore {
   //REGISTER
   async action_register(data) {
     const apiUrl = `${serviceUrls.SERVICE_URL}/user`;
-    await Request.post(data, apiUrl);
+    const success = await Request.post(data, apiUrl);
 
-    return true;
+    return success;
   }
 
   async action_setLogin(value) {

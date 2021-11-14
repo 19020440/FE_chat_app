@@ -26,7 +26,7 @@ export const Request = {
       if (result.success) {
         return true;
       } else {
-        showMessageError('Tạo tài khoản thất bại');
+        showMessageError(result.message || result.code);
         return false;
       }
     } catch (err) {
