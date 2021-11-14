@@ -1,11 +1,12 @@
-import axios from "axios";
-import { useRef } from "react";
-import {Link} from 'react-router-dom'
-import "./register.css";
-import { useHistory } from "react-router";
-import {observer} from 'mobx-react-lite';
-import {useStore} from '../../hook'
- const Register = observer(() =>  {
+import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import './register.css';
+import { useHistory } from 'react-router';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../hook';
+import { routes } from '../../constants/routes';
+
+const Register = observer(() => {
   const username = useRef();
   const email = useRef();
   const password = useRef();
@@ -24,7 +25,7 @@ import {useStore} from '../../hook'
         password: password.current.value,
       };
       const result = await AuthStore.action_register(user);
-      result && history.push("/login");
+      result && history.push(routes.LOGIN);
     }
   };
 
@@ -32,9 +33,9 @@ import {useStore} from '../../hook'
     <div className="login">
       <div className="loginWrapper">
         <div className="loginLeft">
-          <h3 className="loginLogo">Lamasocial</h3>
+          <h3 className="loginLogo">DBMS ChatApp</h3>
           <span className="loginDesc">
-            Connect with friends and the world around you on Lamasocial.
+            Connect with friends and the world around you.
           </span>
         </div>
         <div className="loginRight">
@@ -70,11 +71,14 @@ import {useStore} from '../../hook'
             <button className="loginButton" type="submit">
               Sign Up
             </button>
-            <button className="loginRegisterButton"><Link to="/login">Log into Account</Link></button>
+            <button className="loginRegisterButton">
+              <Link to="/login">Log into Account</Link>
+            </button>
           </form>
         </div>
       </div>
     </div>
   );
 });
+
 export default Register;
