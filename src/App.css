@@ -33,6 +33,11 @@ body {
   scroll-behavior: smooth;
 }
 
+#root {
+  width: 100%;
+  height: 100%;
+}
+
 body::-webkit-scrollbar {
   width: 0px;
 }
@@ -528,7 +533,7 @@ footer span:hover {
   cursor: pointer;
 }
 .container {
-  margin-top: var(--header-height);
+  margin-top: 40px;
   display: flex;
   height: calc(100vh - var(--header-height));
   overflow-y: hidden;
@@ -536,7 +541,7 @@ footer span:hover {
 
 .container-left {
   height: calc(100vh - var(--header-height));
-  width: 360px;
+  width: 100%;
   overflow-y: hidden;
   border-right: 1px solid var(--rgba-black);
   flex-shrink: 0;
@@ -585,13 +590,13 @@ footer span:hover {
 }
 
 .container-left__head-search {
-  margin-top: 12px;
+  /* margin-top: 12px; */
 }
 
 .container-left__search-box {
   display: flex;
   align-items: center;
-  background: var(--bg-color);
+  background: #c2cad6;
   height: 36px;
   border-radius: 20px;
   overflow: hidden;
@@ -608,7 +613,7 @@ footer span:hover {
   flex: 1;
   outline: none;
   border: none;
-  background: var(--bg-color);
+  background: #c5cbd4;
   font-size: 1.4rem;
   color: var(--text-color);
 }
@@ -648,6 +653,9 @@ footer span:hover {
 
 .container-left__item.active {
   background: var(--active-min);
+}
+.activeQVR {
+  display: block !important;
 }
 
 .container-left__item:hover {
@@ -755,7 +763,8 @@ footer span:hover {
   display: flex;
   justify-content: space-between;
   padding: 12px;
-  box-shadow: 0 1px 2px var(--rgba-black);
+  box-shadow: inset 0px -1px 0px 0px rgb(0 0 0 / 18%);
+  position: relative;
 }
 
 .container-main__head-left {
@@ -1055,6 +1064,7 @@ footer span:hover {
   background: var(--bg-color);
   flex: 1;
   border-radius: 20px;
+  position: relative;
 }
 
 .container-main__bottom-search-input {
@@ -1062,7 +1072,7 @@ footer span:hover {
   border: none;
   outline: none;
   color: var(--text-color);
-  background: var(--bg-color);
+  background: #80808052;
   padding: 0 16px;
   font-size: 1.5rem;
   border-radius: 20px;
@@ -1082,7 +1092,7 @@ footer span:hover {
   background: var(--white-color);
   padding: 8px;
   border-radius: 4px;
-  display: none;
+  /* display: none; */
 }
 
 .container-main__bottom-search__list-icon.active {
@@ -1132,7 +1142,7 @@ footer span:hover {
 
 .container-right {
   width: 340px;
-  /* display: none; */
+  display: none;
   height: calc(100vh - var(--header-height));
   overflow-y: auto;
 }
@@ -1352,8 +1362,17 @@ footer span:hover {
 .hidden {
   display: block;
 }
-.image_text {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+.hight_light-text {
+  background-color: yellow;
+}
+
+.loading_component {
+  margin-top: 20%;
+  margin-left: 50%;
+}
+.ant-modal-title {
+  text-align: center;
+}
+p {
+  margin-bottom: 0;
 }

@@ -12,6 +12,7 @@ import Messenger from "./messenger/Messenger";
 import {observer} from 'mobx-react-lite';
 import {useStore} from '../hook'
 import _ from 'lodash'
+import CallVideo from '../components/CallVideo/CallVideo';
 const routes = [
     {
 
@@ -28,9 +29,15 @@ const routes = [
     {
         exact: true,
         path: ROUTE.home,
-        name: "Profile",
+        name: "Home",
         component: Home,
     },
+  //   {
+  //     exact: true,
+  //     path: ROUTE.callvideo,
+  //     name: "CallVideo",
+  //     component: CallVideo,
+  // },
     
   ];
 
@@ -39,19 +46,7 @@ const routes = [
 const PrRouter = observer((props) => {
   const ActionStore = useStore('ActionStore')
   const AuthStore = useStore('AuthStore')
-  useEffect(() => {
-    const getConversations = async () => {
-      if(!_.isEmpty(AuthStore.user) && _.isEmpty(ActionStore.conversations)) {
-        try {
-          const res = await ActionStore.action_getConversation(AuthStore.user?._id);
-        } catch (err) {
-          console.log(err);
-        } 
-      }
-      
-    };
-    getConversations();
-  }, []);
+ 
 
     return (
         <Switch>

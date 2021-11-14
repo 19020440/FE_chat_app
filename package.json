@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.16.13",
     "axios": "^0.21.1",
+    "emoji-picker-react": "^3.4.8",
     "lodash": "^4.17.21",
     "mobx": "^6.3.3",
     "mobx-react-lite": "^3.2.1",
@@ -22,6 +23,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-scroll-to-bottom": "^4.1.2",
+    "simple-peer": "^9.11.0",
     "socket.io-client": "^4.0.1",
     "timeago.js": "^4.0.2",
     "web-vitals": "^1.0.1"

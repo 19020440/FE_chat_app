@@ -2,17 +2,23 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
-import {faAirFreshener, faGift, faInfoCircle, faPhone, faPlusCircle, faPortrait,faArrowAltCircleRight,faThumbsUp} from '@fortawesome/free-solid-svg-icons'
+import {faAirFreshener, faGift, faInfoCircle, faPhone, faPlusCircle, faPortrait,faArrowAltCircleRight,faThumbsUp, faSearch, faChevronDown, faChevronUp, faUpload, faSmileWink, faImage} from '@fortawesome/free-solid-svg-icons'
 import Message from "../../components/message/Message";
-import {findIndexLastTextSeen,sortConversationByUpdateAt,findIndexFromArrayLodash} from '../../helper/function'
+import {findIndexLastTextSeen,addSpantoText,findIndexFromArrayLodash, findObjectFromArrayLodash} from '../../helper/function'
 import { useEffect, useRef, useState } from "react";
-import { Switch, Route,Link, useParams} from "react-router-dom";
+import {useParams,useHistory} from "react-router-dom";
 import {useStore} from '../../hook';
 import {observer} from 'mobx-react-lite'
 import _ from 'lodash';
 import ContainerRight from '../containerRight/ContainerRight'
-import ScrollToBottom from 'react-scroll-to-bottom'
-library.add(fab,faPhone,faInfoCircle,faPlusCircle,faPortrait,faAirFreshener,faGift,faArrowAltCircleRight,faThumbsUp) 
+import SearchMess from '../searchMess/searchMess'
+import UploadFile from '../UploadFile/UploadFile';
+import { format } from "timeago.js";
+import './containermess.css'
+import Gifphy from '../Gifphy/Gifphy';
+import Emoji from '../Emoji/Emoji';
+library.add(fab,faPhone,faInfoCircle,faPlusCircle,faPortrait,faAirFreshener,faGift,
+  faArrowAltCircleRight,faThumbsUp,faSearch,faChevronDown,faChevronUp,faUpload,faSearch,faSmileWink,faImage) 
 
 const ContrainerMess = observer((props) => {
     const AuthStore = useStore('AuthStore')
@@ -23,18 +29,39 @@ const ContrainerMess = observer((props) => {
     const {user} = AuthStore;
     const indexConversation = findIndexFromArrayLodash(ActionStore.conversations, {_id: conversationId});
     const currentConversation = ActionStore.conversations[indexConversation];
-    const showRef = useRef(null);
     const [newMessage, setNewMessage] = useState("");
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const [arrivalMessage,setArrivalMessage]= useState(null)
     const scrollRef = useRef(null);
+    const history = useHistory(); 
+    const [files,setFiles] = useState([]);
+    const [openGif, setOpenGif] = useState(false);
+    const [profileFriend,setProfileFriend] = useState({});
+    const emojiRef = useRef(null);
+    //set ProfileFriend
+    useEffect(() => {
+      if(!_.isEmpty(currentConversation)) {
+        const sizeUserInRoom = _.size(currentConversation.members) > 2 ? true:false;
+        
+        if(sizeUserInRoom) {
+          const status = _.size(currentConversation.members.filter(value => value.id != AuthStore.user._id && value.status)) >=1 ? true : false;
+          setProfileFriend({
+            username: currentConversation.name,
+            profilePicture: currentConversation.covImage,
+            status,
+            isGroup: true
+          })
+        } else {
+          const [userProfile] = currentConversation.members.filter(value => value.id != AuthStore?.user._id);
+          setProfileFriend(userProfile); 
+        }
+      }
+    },[currentConversation])
+
 
     useEffect(() => {
-      if(findIndexFromArrayLodash != -1) {
-          console.log("this is current COV");
-        ActionStore.action_setCurrentConversation(covId);
-      }
-    },[])
+        ActionStore.action_setCurrentConversation(conversationId);
+    },[conversationId])
 
     /// get message
     useEffect(() => {
@@ -48,144 +75,222 @@ const ContrainerMess = observer((props) => {
           console.log(err);
         }
       };
-
       //send message
       const handleSubmit = async (e) => {
-        e.preventDefault();
-        const statusSeen = ActionStore.conversations[indexConversation]?.lastText?.receiveSeen ? true:false;
-        console.log(covId);
+        // e.preventDefault();
         try {
-          const message = {
-            sender: user._id,
-            text: newMessage,
-            conversationId: covId,
-            seens: statusSeen,
-          };
-          const {conversationId,...lastText} = message;
-        if(indexConversation !== null){
-          // ActionStore.action_setLastTextByIndex({_id: conversationId, lastText}, currentLastText.current); 
-          ActionStore.action_setConverSationByIndex({updatedAt: Date(Date.now()),lastText}, indexConversation);
-        }
-        
-        
-    
-        const receiverId = currentConversation.members.find(
-          (member) => member !== user._id
-        );
-        // AuthStore.socket?.emit("update_conversation", )
-    
-       AuthStore.socket?.emit("sendMessage", {
-          senderId: user._id,
-          receiverId,
-          text: newMessage,
-          updatedAt: Date.now(),
-          conversationId: currentConversation?._id,
-          seens: statusSeen,
-        });
-    
-        try {
-          // const res = await axios.post("/messages", message);
-          // console.log(ActionStore.conversations[currentLastText.current]?.lastText?.receiveSeen);
-          const res = await ActionStore.action_saveMessage(message);
-          
-          setMessages([...messages, res]);
-          setNewMessage("");
-        } catch (err) {
-          console.log(err);
-        }
-        } catch(err) {
-          console.log(err);
-        }
 
+          const statusSeen = currentConversation.lastText.seens;
+          const seen = statusSeen.filter(value => value.joinRoom == true && value.id != AuthStore.user._id);
+          console.log(statusSeen);
+          console.log(seen);
+
+          if(newMessage != "") {
+            const message = {
+              sender: user._id,
+              text: JSON.stringify(newMessage),
+              conversationId: covId,
+              seens: statusSeen,
+              seen: !_.isEmpty(seen),
+            };
+            const res = await ActionStore.action_saveMessage(message);
+            const {conversationId,...lastText} = message;
+            if(indexConversation !== null){
+              ActionStore.action_setConverSationByIndex({updatedAt: Date(Date.now()),lastText}, indexConversation);
+            }
+         
+      
+            AuthStore.socket?.emit("sendMessage", res);
+            setMessages([...messages, res]);
+            setNewMessage("");
+          }
+          
+
+
+          setTimeout(async () => {
+            if(!_.isEmpty(AuthStore.textFile)) {
+
+               
+
+              const message = {
+                sender: user._id,
+                text: JSON.stringify(AuthStore.textFile),
+                conversationId: covId,
+                seens: statusSeen,
+                seen: !_.isEmpty(seen),
+              };
+              const res = await ActionStore.action_saveMessage(message);
+              const {conversationId,...lastText} = message;
+              if(indexConversation !== null){
+
+                ActionStore.action_setConverSationByIndex({updatedAt: Date(Date.now()),lastText}, indexConversation);
+              }
+              AuthStore.socket?.emit("sendMessage", res);
+
+              AuthStore.action_resetTextFile(); 
+              setMessages([...messages, res]);
+              setFiles([]);
+            }
+          },0)
+             
+       } catch(err) {
+            console.log(err);
+      }
 
       };
+
+      //Gif Text
+      useEffect(() => {
+        if(AuthStore.textGif)  setMessages([...messages, AuthStore.textGif]);
+      },[AuthStore.textGif])
+      /// call video
+      const handleCallVideo =  () => {
+        window.open(`http://localhost:3000/callvideo?from=${user._id}&room=${conversationId}&status=${0}`)
+      }
+
+      // Files
+
+      const handleFiles = (e) => {
+        AuthStore.action_uploadFile(Object.values(e.target.files));
+
+        const file = Object.values(e.target.files).map((value,index) => {
+          value.preview = URL.createObjectURL(value)
+          value.id = Date.now() + "_" +index;
+          return value;
+        })
+
+        setFiles([...files,...file]);
+      }
 
       const handleShowRightConversation = () => {
         AuthStore.action_setActiveContainer();
         }
       // set arrives message
       useEffect(() => {
-        arrivalMessage &&
-        currentConversation?.members.includes(arrivalMessage.sender) &&
+        arrivalMessage && 
+        !_.isEmpty( currentConversation?.members.filter(value => value.id == arrivalMessage.sender)) &&
           setMessages((prev) => [...prev, arrivalMessage]);
-      }, [arrivalMessage, currentConversation]);
+      }, [arrivalMessage]);
 
       useEffect(() => {
         AuthStore.socket?.on("getMessage", (data) => {
-            console.log("this is text: ", data.text);
-        //    ActionStore.action_updateConnversationById({
-        //      updatedAt:Date(data.updatedAt),
-        //      lastText: {
-        //        sender: data.senderId,
-        //        text: data.text,
-        //        seens: data.seens,
-        //      }
-        //    }, data.conversationId);
-           setArrivalMessage({
-             sender: data.senderId,
-             text: data.text,
-             createdAt: Date.now(),
-           });
-          // setMessages((prev) => [...prev, {
-          //   sender: data.senderId,
-          //   text: data.text,
-          //   createdAt: Date.now(),
-          // }]);
+           setArrivalMessage(data);
          });
        }, []);
       
-  //Show rightbar
-  const handleShowRightBar = () => {
-    const element = showRef.current.getAttribute("class");
-    if(element.indexOf("hid") != -1) {
-      showRef.current.classList.remove("hid");
-    } else showRef.current.classList.add("hid");
-  }
 
 
+       //search mess
+       useEffect(() => {
+         try {
+            if(AuthStore.stt !==null) {
+              let spanText = document.querySelectorAll('.hight_light-text');
+              if(!_.isEmpty( spanText))   spanText.forEach(value => {
+                value.classList.remove("hight_light-text");
+              })
+              let result =  document.getElementById(`mess${AuthStore.stt}`);
+              const text =  result.querySelector('.messageText').innerHTML;
+              result.querySelector('.messageText').innerHTML = addSpantoText(text,AuthStore.textSearch)
+              document.getElementById(`mess${AuthStore.stt != 0 ? AuthStore.stt-1 : 0}`).scrollIntoView();  
+            } else {
+              let spanText = document.querySelectorAll('.hight_light-text');
+              spanText.forEach(value => {
+                console.log(value);
+                value.classList.remove("hight_light-text");
+              })
+              
+            }
+         } catch(err) {
+           console.log(err);
+         }
+       
+       },[AuthStore.stt])
 
     //Join Room 
     useEffect(() => {
       if(!_.isEmpty(currentConversation)) {
       handleJoinRoom(currentConversation);
       }
-    },[ActionStore.profileOfFriend])
+    },[currentConversation])
+
   const handleJoinRoom = async (conversation) => {
     try {
-    //  const friendId = conversation.members.find((m) => m !== user._id);
-     const res = ActionStore.profileOfFriend;
-     AuthStore.socket?.emit("join_room", {socketId: res?.socketId, conversationId: conversation._id, receiveId: res?._id})
-     ActionStore.action_updateStatusSeenSelf(conversation._id); 
+      console.log("action join room");
+     AuthStore.socket?.emit("join_room", {senderId: AuthStore?.user._id, conversationId: conversation._id})
+     ActionStore.action_updateStatusSeenSelf({conversationId: conversation._id,senderId: AuthStore?.user._id}); 
      
    } catch (err) {
      console.log(err);
    }
      
 }
-console.log("re-render");
 
-//get Profile
-useEffect(() => {
-  profileFriend();
-},[ActionStore.offlineStatus, covId])
+//SELFIE 
+ const handleSelfie = () => {
+   history.push('/camera')
+ }
 
-const profileFriend = async () => {
-  // ActionStore.action_setProfileOfFriend("");
-  if(!_.isEmpty(currentConversation)) {
-    const friendId = currentConversation.members.find((m) => m !== user._id); 
-    try {
-      const res = await ActionStore.action_getProfile(friendId);
-      ActionStore.action_setProfileOfFriend(res);
-    } catch (err) {
-      console.log(err);
+//Out room
+  useEffect(() => {
+    return () => {
+      console.log("out this room: ", conversationId);
+      setMessages([]);
+   
+    conversationId &&  handleOutComponent();
     }
-  }
-  
-}
+  },[conversationId])
 
-useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  const handleOutComponent = async () => {
+    // if(currentConversation.current !== null) {
+        try {
+            const conversations = findObjectFromArrayLodash(ActionStore.conversations, {_id: conversationId});
+            const friendId = conversations.members.find((m) => m.id !== AuthStore.user?._id);
+            const res = await ActionStore.action_getProfile(friendId.id);
+            // ActionStore.action_updateConversationSeenOutRoomSeft(conversationId);
+            AuthStore.socket?.emit("out_room",  {senderId: AuthStore.user._id, conversationId: conversations._id});
+
+          } catch(err) {
+            console.log(err);
+          }
+    // }
+  }
+
+//send mess by enter
+// const handleSendMessByEnter = (e) => {
+//   if(e.which == 13) {
+
+//   }
+// }
+
+
+//get gifphy list
+  const handleGetGifphyList = () => {
+    setOpenGif(!openGif);
+  }
+
+  useEffect(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const cancel =  (index) => {
+    const result = files.filter(value => value.id != index);
+    setFiles([...result]);
+  }
+
+  //EMOJI
+  const handleShowEmoJi = () => {
+    const element =   emojiRef.current.getAttribute("class");
+    if(element.indexOf("hidden_icon") != -1) {
+      emojiRef.current.classList.remove("hidden_icon");
+    } else emojiRef.current.classList.add("hidden_icon");
+  }
+
+  useEffect(() => {
+    return () => {
+      console.log("delete mes");
+      setMessages([]);
+    }
+  },[])
     return (
         <>
             <div className="container-main">
@@ -193,47 +298,49 @@ useEffect(() => {
                         <div className="container-main__head-left">
                             <div className="container-main__head-left-avt">
                                 <img className="container-main__head-left-avt-img avt-mess" src={
-                                    ActionStore.profileOfFriend?.profilePicture
-                                        ? ActionStore.profileOfFriend?.profilePicture
+                                    profileFriend?.profilePicture
+                                        ? profileFriend?.profilePicture
                                         : PF + "person/noAvatar.png"
                                     } alt="" />
                             </div>
-                            <span className={ActionStore.profileOfFriend?.status ? "status_active1":""}></span>
+                            <span className={profileFriend?.status ? "status_active1":""}></span>
                             <div className="container-main__head-left-info">
                                 <div className="container-main__head-left-info__name name-mess">
-                                    {ActionStore.profileOfFriend?.username}
+                                    {profileFriend?.username}
                                 </div>
                                 <div className="container-main__head-left-info-time online">
-                                    Hoạt động
-                                    <span>1</span>
-                                    giờ trước
+                                    
+                                    <span>{profileFriend.status?"Đang hoạt động":`Hoạt động cách đây ${format(currentConversation?.updatedAt)}`}</span>
+                                    
                                 </div>
                             </div>
                         </div>
                         <div className="container-main__head-right">
                             <div className="container-main__head-right-btn">
-                                <FontAwesomeIcon icon={faPhone} />
+                                <FontAwesomeIcon icon={faPhone} style={{transform: `rotate(90deg)`}}/>
                             </div>
-                            <div className="container-main__head-right-btn">
+                            <div className="container-main__head-right-btn" onClick={handleCallVideo}>
                                 <FontAwesomeIcon icon="fa-solid fa-video" />
                             </div>
                             <div className="container-main__head-right-btn more-info-btn" onClick={handleShowRightConversation}>
                                 <FontAwesomeIcon icon={faInfoCircle} />
                             </div>
                         </div>
+                        {AuthStore.statusSearchMess &&  <SearchMess/>}
+                       
                     </div>
                     <div className="container-main__body">
                         <div className="container-main__list--no-content">
                             <div className="no-content__avt">
                                 <img src={
-                                    ActionStore.profileOfFriend?.profilePicture
-                                        ? ActionStore.profileOfFriend?.profilePicture
+                                    profileFriend?.profilePicture
+                                        ? profileFriend?.profilePicture
                                         : PF + "person/noAvatar.png"
                                     } alt="" className="no-content__img avt-mess" />
                             </div>
                             <div className="no-content__info">
                                 <div className="no-content__info-name name-mess">
-                                {ActionStore.profileOfFriend?.username} 
+                                {profileFriend?.username} 
                                 </div>
                                 <div className="no-content__info-sub">
                                     Facebook
@@ -246,180 +353,81 @@ useEffect(() => {
                                 {/* <div > */}
                                     {messages.map((m, index) => {
                                         return (
-                                            <li className="container-main__item1" ref={scrollRef}>
+                                            <li className="container-main__item1" ref={scrollRef} id={`mess${index}`}>
                                                 <Message message={m} own={m.sender === user._id} 
                                                     // seen={(index == (_.size(messages)-1)) && m.seens ? true:false}
-                                                    seen={m.seens}
+                                                    seen={m.seen}
                                                     lastTextSeen = {findIndexLastTextSeen(messages) == index ? true:false}
+                                                    key={conversationId + index}
                                                 />
                                             </li>
                                         );
                                     })}
                                 {/* </div> */}
-                                {/* <li className="container-main__item isReaction">
-                                    <div className="container-main__item-avt">
-                                        <img src="" alt="" className="container-main__item-avt__img" />
-                                    </div>
-                                    <div className="container-main__item-content">
-                                        <div className="container-main__item-text">
-                                            Thử màu đó coi sao
-                                        </div>
-                                        <div className="container-main__item-reaction">
-                                            <div className="container-main__item-reaction-icon">
-                                                <i  className="fas fa-heart"></i>
-                                            </div>
-                                            <div className="container-main__item-reaction-total">
-                                                1
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="container-main__item-group">
-                                        <div className="container-main__item-group-btn">
-                                            <i  className="fas fa-heart"></i>
-                                        </div>
-                                        <div className="container-main__item-group-btn">
-                                            <i className="fad fa-trash-alt"></i>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className="container-main__item isUser isReaction">
-                                    <div className="container-main__item-avt">
-                                        <img src="" alt="" className="container-main__item-avt__img" />
-                                    </div>
-                                    <div className="container-main__item-content">
-                                        <div className="container-main__item-text">
-                                            Thử màu đó coi sao
-                                        </div>
-                                        <div className="container-main__item-reaction">
-                                            <div className="container-main__item-reaction-icon">
-                                                <i  className="fas fa-heart"></i>
-                                            </div>
-                                            <div className="container-main__item-reaction-total">
-                                                1
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="container-main__item-group">
-                                        <div className="container-main__item-group-btn">
-                                            <i  className="fas fa-heart"></i>
-                                        </div>
-                                        <div className="container-main__item-group-btn">
-                                            <i className="fad fa-trash-alt"></i>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className="container-main__item isUser isReaction">
-                                    <div className="container-main__item-avt">
-                                        <img src="" alt="" className="container-main__item-avt__img" />
-                                    </div>
-                                    <div className="container-main__item-content">
-                                        <div className="container-main__item-text">
-                                            Thử màu đó coi sao
-                                        </div>
-                                        <div className="container-main__item-reaction">
-                                            <div className="container-main__item-reaction-icon">
-                                                <i  className="fas fa-heart"></i>
-                                            </div>
-                                            <div className="container-main__item-reaction-total">
-                                                1
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="container-main__item-group">
-                                        <div className="container-main__item-group-btn reaction-btn">
-                                            <i  className="fas fa-heart"></i>
-                                        </div>
-                                        <div className="container-main__item-group-btn">
-                                            <i className="fad fa-trash-alt"></i>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className="container-main__item">
-                                    <div className="container-main__item-avt">
-                                        <img src="" alt="" className="container-main__item-avt__img" />
-                                    </div>
-                                    <div className="container-main__item-content">
-                                        <div className="container-main__item-text">
-                                            Thử màu đó coi sao
-                                        </div>
-                                        <div className="container-main__item-reaction">
-                                            <div className="container-main__item-reaction-icon">
-                                                <i className="fas fa-heart"></i>
-                                            </div>
-                                            <div className="container-main__item-reaction-total">
-                                                1
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="container-main__item-group">
-                                        <div className="container-main__item-group-btn">
-                                            <i  className="fas fa-heart"></i>
-                                        </div>
-                                        <div className="container-main__item-group-btn">
-                                            <i className="fad fa-trash-alt"></i>
-                                        </div>
-                                    </div>
-                                </li> */}
                                  
                             </ul>
                     </div>
                     <div className="container-main__bottom">
+                      
                         <div className="container-main__bottom-left">
                             <div className="container-main__bottom-left-icon">
-                                {/* <i className="fas fa-plus-circle"></i> */}
                                 <FontAwesomeIcon icon={faPlusCircle} />
                             </div>
-                            <div className="container-main__bottom-left-icon hide">
+                            <div className="container-main__bottom-left-icon hide" onClick={handleSelfie}>
                                 <FontAwesomeIcon icon={faPortrait} />
                             </div>
-                            <div className="container-main__bottom-left-icon hide">
+                            <label for="upload_files" className="container-main__bottom-left-icon hide container-upload-label">
                             
-                                <FontAwesomeIcon icon={faAirFreshener} />
-                            </div>
-                            <div className="container-main__bottom-left-icon hide">
-                            
-                            <FontAwesomeIcon icon={faGift} />
+                                <FontAwesomeIcon icon={faImage} />
+                            </label>
+                            <div className="container-main__bottom-left-icon hide container-main__bottom-left-icon-gifphy">
+                                {openGif && <Gifphy currentConversation={currentConversation} indexCov={indexConversation} /> }
+                              <FontAwesomeIcon icon={faGift} onClick={handleGetGifphyList} />
                             </div>
                         </div>
                         <div className="container-main__bottom-search">
-                            <input type="text" placeholder="Aa" className="container-main__bottom-search-input"  
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            value={newMessage}
-                            />
-                            <div className="container-main__bottom-search__icon">
-                                <i className="fas fa-smile-wink"></i>
-                                <div className="container-main__bottom-search__list-icon">
-                                    <div className="container-main__bottom-icon-item">
-                                        <i  alt="&#xf4da;" className="fas fa-smile-wink"></i>
+                          
+                                    {!_.isEmpty(files) && 
+  
+                                      <div className="container-main__bottom-search-multi-input-upload">
+                                        {
+                                          files.map((value, index) => {
+                                            return (
+                                              <UploadFile file={value}  cancel={cancel} indexs={index}/>
+                                            );
+                                          })
+                                        }
+                                        
+        
+                                        <label for="upload_files">
+                                          <FontAwesomeIcon icon={faUpload} />
+                                        </label>
+                                    
                                     </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf5b4;" className="fas fa-sad-tear"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf586;" className="fas fa-grin-squint-tears"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf556;" className="fas fa-angry"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf579;" className="fas fa-flushed"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf5a4;" className="fas fa-meh-blank"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf5a5;" className="fas fa-meh-rolling-eyes"></i>
-                                    </div>
-                                    <div className="container-main__bottom-icon-item">
-                                        <i alt="&#xf11a;" className="fas fa-meh"></i>
-                                    </div>
+                                    
+                                    }
+                                    <span className="dragBox" hidden>
+                                          <input type="file" multiple onChange={handleFiles} id="upload_files" />
+                                        </span>
+                              
+                              
+                              <input type="text" placeholder="Aa" className="container-main__bottom-search-input"  
+                              onChange={(e) => setNewMessage(e.target.value)}
+                              value={newMessage}
+                              onKeyPress={(e) => {
+                                if(e.which == 13) handleSubmit();
+                              }}
+                              />
+                              
+                            <div className="container-main__bottom-search__icon" >
+                              <FontAwesomeIcon icon={faSmileWink} onClick={handleShowEmoJi}/>
+                                <div className="container-main__bottom-search__list-icon hidden_icon" ref={emojiRef}>
+                                    <Emoji/>
+                                   
                                 </div>
                             </div>
                         </div>
                         <div className="container-main__bottom-right">
-                            <div className="container-main__bottom-thumb-up">
-                                <FontAwesomeIcon icon={faThumbsUp} />
-                            </div>
                             <div className="container-main__bottom-send"  onClick={handleSubmit}>
                                 <FontAwesomeIcon icon={faArrowAltCircleRight} />
                             </div>
@@ -427,7 +435,7 @@ useEffect(() => {
                     </div>
                 </div>
         
-                                <ContainerRight />
+                                <ContainerRight infoRoom={profileFriend} members={currentConversation?.members} messenger={messages}/>
         </>
     );
 })

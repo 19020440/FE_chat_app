@@ -1,13 +1,9 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
-import Online from "../online/Online";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+
+import {  useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import { Add, Remove } from "@material-ui/icons";
 import {useStore} from '../../hook';
-
 import {observer} from 'mobx-react-lite'
 import _ from "lodash";
 const Rightbar = observer(({ user }) => {
@@ -16,11 +12,11 @@ const Rightbar = observer(({ user }) => {
   const currentUser = AuthStore.user;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
-  // const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [followed, setFollowed] = useState(
-    // currentUser.followings.includes(user?.id)
-  );
+  const [followed, setFollowed] = useState(false);
 
+  useEffect(() => {
+    setFollowed(currentUser.followings.includes(user?._id));
+  },[user])
   useEffect(() => {
     const getFriends = async () => {
       try {
@@ -34,21 +30,14 @@ const Rightbar = observer(({ user }) => {
   }, [user]);
 
   const handleClick = async () => {
-    try {
+
       if (followed) {
-        await axios.put(`/users/${user._id}/unfollow`, {
-          userId: currentUser._id,
-        });
-        // dispatch({ type: "UNFOLLOW", payload: user._id });
+        await AuthStore.action_addFriend(false,user._id)
       } else {
-        await axios.put(`/users/${user._id}/follow`, {
-          userId: currentUser._id,
-        });
-        // dispatch({ type: "FOLLOW", payload: user._id });
+        await AuthStore.action_addFriend(true,user._id)
       }
       setFollowed(!followed);
-    } catch (err) {
-    }
+    
   };
 
   const HomeRightbar = () => {
@@ -63,9 +52,9 @@ const Rightbar = observer(({ user }) => {
         <img className="rightbarAd" src="assets/ad.png" alt="" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
-          {Users.map((u) => (
+          {/* {Users.map((u) => (
             <Online key={u.id} user={u} />
-          ))}
+          ))} */}
         </ul>
       </>
     );

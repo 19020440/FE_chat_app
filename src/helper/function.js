@@ -49,7 +49,7 @@ export const showMessageError = (msg, onOk) => {
 
   export const findIndexLastTextSeen = (data) => {
     if(_.size(data) >=1){
-      for(let i = _.size(data)-1; i >=0;--i)   if(data[i].seens) return i;
+      for(let i = _.size(data)-1; i >=0;--i)   if(data[i].seen) return i;
       return null;
     }
 
@@ -66,11 +66,40 @@ export const showMessageError = (msg, onOk) => {
     let count = 0;
     try {
       conversations.map((value) => {
-        if(value?.lastText?.seens === false && value.lastText?.sender != userId) count++;
+        if(value.lastText.sender != userId) {
+          value.lastText.seens.map(user => {
+            if(user.id == userId && !user.seen) count++;
+          })
+        }
+        
       })
     } catch(err) {
       console.log(err);
     }
     
     return count;
+  }
+
+  export const findMessenger = (data,string) => {
+    const result  = data.map((value,index) => {
+      if(value.text.indexOf(string) != -1 && !_.isArray(JSON.parse(value.text))) return index;
+    })
+    const rs = result.filter(value => value != undefined)
+    return rs;
+  }
+
+  export const addSpantoText = (string,find) => {
+    let re = new RegExp(find, 'g');
+    string = string.replace(re, `<span class="hight_light-text">${find}</span>`);
+    return string;
+  }
+
+  export const deleteItemInArrayByIndex = (arr,index) => {
+    arr.splice(index,1);
+    console.log(arr);
+    return arr;
+  }
+
+  export const MapCreateGroupData = (data) => {
+  
   }
