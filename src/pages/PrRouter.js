@@ -1,13 +1,21 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { routes } from '../constants/routes';
+import Messenger from './messenger/Messenger';
 
-const routes = [];
+const protectedRoutes = [
+  {
+    path: routes.MESSENGER,
+    name: 'Messenger',
+    component: Messenger,
+  },
+];
 
 const PrRouter = observer((props) => {
   return (
     <Switch>
-      {routes.map((route, idx) => {
+      {protectedRoutes.map((route, idx) => {
         return (
           route.component && (
             <Route

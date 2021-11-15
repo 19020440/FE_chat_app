@@ -53,21 +53,15 @@ export const sortConversationByUpdateAt = (conversations) => {
   return result;
 };
 
+// @author: manhthd, 2021 Nov 15
 export const countTextNotSeen = (conversations, userId) => {
-  let count = 0;
-  try {
-    conversations.map((value) => {
-      if (value.lastText.sender !== userId) {
-        value.lastText.seens.map((user) => {
-          if (user.id === userId && !user.seen) count++;
-        });
-      }
-    });
-  } catch (err) {
-    console.log(err);
-  }
-
-  return count;
+  const result = conversations.reduce((res, conver) => {
+    if (conver.lastText.sender === userId) return res;
+    const seenElem = conver.lastText.seens.find((elem) => elem.id === userId);
+    if (!seenElem) return res + 1;
+    return seenElem.seen ? res : res + 1;
+  }, 0);
+  return result;
 };
 
 export const findMessenger = (data, string) => {

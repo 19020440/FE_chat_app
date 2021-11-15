@@ -9,6 +9,11 @@ const serviceUrls = {
   SERVICE_TEXT_FILE: 'http://localhost:8800/images',
 };
 
+const socketEvents = {
+  USER_OFFLINE: 'userOffline',
+  INVITE_TO_GROUP: 'invite_to_group',
+}
+
 const localStorage = {
   TOKEN: 'token',
 };
@@ -17,4 +22,5 @@ module.exports = {
   loginStatuses,
   localStorage,
   serviceUrls,
+  socketEvents,
 };
