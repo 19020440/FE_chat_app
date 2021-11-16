@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { loginStatuses, serviceUrls } from '../constants/configValues';
 
 export class AuthStore {
-  login = loginStatuses.ANONYMOUS;
+  login = loginStatuses.LOGINED;
   user = {};
 
   constructor() {
