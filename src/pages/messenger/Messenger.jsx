@@ -1,7 +1,5 @@
 import { Col, Layout, Row, Switch } from 'antd';
 import MyHeader from '../../components/header/Header';
-import { Content, Header } from 'antd/lib/layout/layout';
-import Sider from 'antd/lib/layout/Sider';
 import { observer } from 'mobx-react-lite';
 import { Route } from 'react-router-dom';
 import { useStore } from '../../hook';
@@ -10,7 +8,7 @@ import './messenger.css';
 
 const Messenger = observer(() => {
   const AuthStore = useStore('AuthStore');
-
+  const {Sider, Header,Content} = Layout;
   return (
     <Layout className="app">
       <Sider>

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useHistory } from 'react-router-dom';
 import { useStore } from '../../hook';
 import { routes } from '../../constants/routes';
-import './header.css';
+
 import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
 import {
   faBell,
@@ -16,7 +16,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { useState } from 'react';
 import { countTextNotSeen } from '../../helper/functions';
 import { socketEvents } from '../../constants/configValues';
-
+import './header.css';
 library.add(faSignOutAlt, faGamepad, faFacebookMessenger, faBell);
 
 const Header = observer((props) => {
