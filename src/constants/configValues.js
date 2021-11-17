@@ -10,8 +10,12 @@ const serviceUrls = {
 };
 
 const socketEvents = {
-  USER_OFFLINE: 'userOffline',
-  INVITE_TO_GROUP: 'invite_to_group',
+  USER_OFFLINE: 'USER_OFFLINE',
+  INVITE_TO_GROUP: 'INVITE_TO_GROUP',
+  JOIN_ROOM: 'JOIN_ROOM',
+  OUT_ROOM: 'OUT_ROOM',
+  SEND_MESSAGE: 'SEND_MESSAGE',
+  GET_MESSAGE: 'GET_MESSAGE',
 }
 
 const localStorage = {
