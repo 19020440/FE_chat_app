@@ -5,7 +5,7 @@ import { useStore } from '../../hook';
 import { observer } from 'mobx-react-lite';
 import _ from 'lodash';
 import { sortConversationByUpdateAt } from '../../helper/functions';
-// import ProfileRight from '../ProfileRight/ProfileRight'
+import ProfileRight from '../ProfileRight/ProfileRight'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -182,12 +182,12 @@ const Conversation = observer(() => {
                       // await handlePassPage(conversation);
                       // beforeConversation.current = conversation?._id;
                     }}>
-                    {/* <ProfileRight 
+                    <ProfileRight 
                                         conversation={conversation} 
                                         seen={conversation.lastText?.seens.filter(value => value.id == AuthStore.user._id)}
                                         isGroup={_.size(conversation.members) > 2? true:false}
                                         
-                                        /> */}
+                                        />
                   </li>
                 </>
               );

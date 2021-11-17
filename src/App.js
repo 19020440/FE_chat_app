@@ -8,6 +8,7 @@ import { loginStatuses } from './constants/configValues';
 import { useStore } from './hook';
 import './App.css';
 import 'antd/dist/antd.css';
+import { useEffect } from 'react';
 
 const App = observer(() => {
   const AuthStore = useStore('AuthStore');

@@ -11,7 +11,7 @@ import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { Row, Col } from 'antd';
 library.add(fab, faFile);
 
-const Message = observer(({ message, own, seen, lastTextSeen }) => {
+const Message = observer(({ message, own, lastTextSeen }) => {
   const AuthStore = useStore('AuthStore');
   // const ActionStore = useStore('ActionStore');
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -20,7 +20,6 @@ const Message = observer(({ message, own, seen, lastTextSeen }) => {
   const profileFriends = message.seens.filter(
     (value) => value.id === message.sender
   );
-  const [profileFriend, setProfileFriend] = useState({});
   const lengText = _.size(JSON.parse(message.text));
   const text = JSON.parse(message.text);
   useEffect(() => {
@@ -28,20 +27,17 @@ const Message = observer(({ message, own, seen, lastTextSeen }) => {
       setIsText(true);
     } else setIsFile(true);
   }, []);
-  useEffect(() => {
-    if (!_.isEmpty(profileFriends)) setProfileFriend(profileFriends[0]);
-    // console.log(JSON.parse(message.text));
-  }, []);
+
   return (
     <div className={own ? 'message own' : 'message notOwn'}>
       <div className="messageTop">
-        {message.sender !== AuthStore.user._id && (
+        {message.sender !== 1 && (
           <>
             <img
               className="messageImg"
               src={
-                profileFriend.profilePicture !== ''
-                  ? profileFriend.profilePicture
+                profileFriends.profilePicture !== ''
+                  ? profileFriends.profilePicture
                   : PF + 'person/noAvatar.png'
               }
               alt=""
@@ -95,13 +91,14 @@ const Message = observer(({ message, own, seen, lastTextSeen }) => {
                   </Col>
                 );
             })}
+
           {
-            lastTextSeen && message.sender === AuthStore.user._id && (
+            lastTextSeen && message.sender === 1 && (
               //  <div className="list_seen_messenger" hidden>
 
               <>
                 {message.seens.map((value) => {
-                  if (value.id !== AuthStore.user._id && value.seen)
+                  if (value.id !== 1)
                     return (
                       <img
                         src={value.profilePicture}
@@ -115,7 +112,7 @@ const Message = observer(({ message, own, seen, lastTextSeen }) => {
 
             // </div>
           }
-          {!seen && message.sender === AuthStore.user._id && (
+          {_.size(message.seens) <= 1 && message.sender === 1 && (
             <>
               <img
                 className="image_text"
@@ -124,7 +121,6 @@ const Message = observer(({ message, own, seen, lastTextSeen }) => {
               />
             </>
           )}
-          {/* {console.log(text + " :" + isFile)} */}
         </Row>
       </div>
       <div className="messageBottom">{format(message.createdAt)}</div>

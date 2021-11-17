@@ -37,7 +37,7 @@ export const findIndexFromArrayLodash = (arr, obj) => {
 
 export const findIndexLastTextSeen = (data) => {
   if (_.size(data) >= 1) {
-    for (let i = _.size(data) - 1; i >= 0; --i) if (data[i].seen) return i;
+    for (let i = _.size(data) - 1; i >= 0; --i) if (_.size(data[i].seens) > 1) return i;
     return null;
   }
 

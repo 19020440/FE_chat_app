@@ -130,60 +130,57 @@ const ContrainerMess = observer((props) => {
   //send message
   const handleSubmit = async (e) => {
     // e.preventDefault();
+    const listId = [{id:1,profilePicture: "https://upload.wikimedia.org/wikipedia/commons/0/06/Tr%C3%BAc_Anh_%E2%80%93_M%E1%BA%AFt_bi%E1%BA%BFc_BTS_%282%29.png"},
+   
+  ]
     try {
-      const statusSeen = currentConversation.lastText.seens;
-      const seen = statusSeen.filter(
-        (value) => value.joinRoom === true && value.id !== AuthStore.user._id
-      );
-      console.log(statusSeen);
-      console.log(seen);
+      
 
       if (newMessage !== '') {
         const message = {
-          sender: user._id,
+          sender: 1,
           text: JSON.stringify(newMessage),
           conversationId: covId,
-          seens: statusSeen,
-          seen: !_.isEmpty(seen),
+          seens: listId
         };
-        const res = await ActionStore.action_saveMessage(message);
-        const { conversationId, ...lastText } = message;
-        if (indexConversation !== null) {
-          ActionStore.action_setConverSationByIndex(
-            { updatedAt: Date(Date.now()), lastText },
-            indexConversation
-          );
-        }
+        // const res = await ActionStore.action_saveMessage(message);
+        // const { conversationId, ...lastText } = message;
+        // if (indexConversation !== null) {
+        //   ActionStore.action_setConverSationByIndex(
+        //     { updatedAt: Date(Date.now()), lastText },
+        //     indexConversation
+        //   );
+        // }
 
-        AuthStore.socket?.emit(socketEvents.SEND_MESSAGE, res);
-        setMessages([...messages, res]);
+        // AuthStore.socket?.emit(socketEvents.SEND_MESSAGE, res);
+        setMessages([...messages, message]);
         setNewMessage('');
       }
 
-      setTimeout(async () => {
-        if (!_.isEmpty(AuthStore.textFile)) {
-          const message = {
-            sender: user._id,
-            text: JSON.stringify(AuthStore.textFile),
-            conversationId: covId,
-            seens: statusSeen,
-            seen: !_.isEmpty(seen),
-          };
-          const res = await ActionStore.action_saveMessage(message);
-          const { conversationId, ...lastText } = message;
-          if (indexConversation !== null) {
-            ActionStore.action_setConverSationByIndex(
-              { updatedAt: Date(Date.now()), lastText },
-              indexConversation
-            );
-          }
-          AuthStore.socket?.emit(socketEvents.SEND_MESSAGE, res);
+      // setTimeout(async () => {
+      //   if (!_.isEmpty(AuthStore.textFile)) {
+      //     const message = {
+      //       sender: user._id,
+      //       text: JSON.stringify(AuthStore.textFile),
+      //       conversationId: covId,
+      //       seens: statusSeen,
+      //       seen: !_.isEmpty(seen),
+      //     };
+      //     const res = await ActionStore.action_saveMessage(message);
+      //     const { conversationId, ...lastText } = message;
+      //     if (indexConversation !== null) {
+      //       ActionStore.action_setConverSationByIndex(
+      //         { updatedAt: Date(Date.now()), lastText },
+      //         indexConversation
+      //       );
+      //     }
+      //     AuthStore.socket?.emit(socketEvents.SEND_MESSAGE, res);
 
-          AuthStore.action_resetTextFile();
-          setMessages([...messages, res]);
-          setFiles([]);
-        }
-      }, 0);
+      //     AuthStore.action_resetTextFile();
+      //     setMessages([...messages, res]);
+      //     setFiles([]);
+      //   }
+      // }, 0);
     } catch (err) {
       console.log(err);
     }
@@ -437,11 +434,10 @@ const ContrainerMess = observer((props) => {
                   id={`mess${index}`}>
                   <Message
                     message={m}
-                    own={m.sender === user._id}
+                    own={m.sender === 1}
                     // seen={(index == (_.size(messages)-1)) && m.seens ? true:false}
-                    seen={m.seen}
+                    
                     lastTextSeen={findIndexLastTextSeen(messages) === index}
-                    key={conversationId + index}
                   />
                 </li>
               );
