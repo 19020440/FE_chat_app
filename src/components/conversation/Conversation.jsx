@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 // import SearchFriend from '../searchFriend/search'
 import { Modal, Tooltip } from 'antd';
 import { PersonAdd, GroupAdd } from '@material-ui/icons';
+import { socketEvents } from '../../constants/configValues';
 
 library.add(faSearch, faArrowLeft, faUsers);
 
@@ -60,10 +61,11 @@ const Conversation = observer(() => {
   // > UI parts
   const modalGroup = (isModalVisible) => {
     const handleInviteGroup = (e, userId) => {
-      // AuthStore.socket.emit(socketEvents.INVITE_TO_GROUP, {
-      //   from: AuthStore.user,
-      //   to: userId,
-      // });
+      // TODO: logic backend: directly add to group
+      AuthStore.socket.emit(socketEvents.INVITE_TO_GROUP, {
+        from: AuthStore.user,
+        to: userId,
+      });
     };
     return (
       <Modal

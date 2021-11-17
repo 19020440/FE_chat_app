@@ -13,6 +13,9 @@ const App = observer(() => {
   const AuthStore = useStore('AuthStore');
   const { login } = AuthStore;
 
+  // TODO: add useEffect for conversations, update when userId change
+  // TODO: socket events, use socketEvents.? from /constants/configValues.js
+
   return (
     <>
       <Switch>
