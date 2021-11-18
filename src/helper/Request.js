@@ -24,7 +24,7 @@ export const Request = {
       const result = await api.post(url, data).then(resp => resp.data);
 
       if (result.success) {
-        return true;
+        return result;
       } else {
         showMessageError(result.message || result.code);
         return false;

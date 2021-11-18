@@ -9,12 +9,19 @@ import { useStore } from './hook';
 import './App.css';
 import 'antd/dist/antd.css';
 import { useEffect } from 'react';
+import {getConversations} from './helper/backendApis'
 
 const App = observer(() => {
   const AuthStore = useStore('AuthStore');
+  const ActionStore = useStore('ActionStore');
   const { login } = AuthStore;
 
   // TODO: add useEffect for conversations, update when userId change
+  useEffect(() => {
+    login == 1 && getConversations(AuthStore.user?._id).then(conversation => {
+      ActionStore.action_setListConversation(conversation.data);
+    })
+  },[AuthStore.user?._id])
   // TODO: socket events, use socketEvents.? from /constants/configValues.js
 
   return (

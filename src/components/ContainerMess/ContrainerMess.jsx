@@ -33,6 +33,7 @@ import _ from 'lodash';
 import { Duo } from '@material-ui/icons';
 import ContainerRight from '../containerRight/ContainerRight';
 import { format } from 'timeago.js';
+import {createNewMessege} from '../../helper/backendApis'
 import './containermess.css';
 import { socketEvents } from '../../constants/configValues';
 
@@ -130,7 +131,8 @@ const ContrainerMess = observer((props) => {
   //send message
   const handleSubmit = async (e) => {
     // e.preventDefault();
-    const listId = [{id:1,profilePicture: "https://upload.wikimedia.org/wikipedia/commons/0/06/Tr%C3%BAc_Anh_%E2%80%93_M%E1%BA%AFt_bi%E1%BA%BFc_BTS_%282%29.png"},
+    const listId = [
+          {id:1,profilePicture: "https://upload.wikimedia.org/wikipedia/commons/0/06/Tr%C3%BAc_Anh_%E2%80%93_M%E1%BA%AFt_bi%E1%BA%BFc_BTS_%282%29.png"},
    
   ]
     try {
@@ -138,12 +140,11 @@ const ContrainerMess = observer((props) => {
 
       if (newMessage !== '') {
         const message = {
-          sender: 1,
+          senderId: user?._id,
           text: JSON.stringify(newMessage),
-          conversationId: covId,
-          seens: listId
+          conversationId: covId, 
         };
-        // const res = await ActionStore.action_saveMessage(message);
+        const res = await createNewMessege(message);
         // const { conversationId, ...lastText } = message;
         // if (indexConversation !== null) {
         //   ActionStore.action_setConverSationByIndex(
@@ -151,7 +152,7 @@ const ContrainerMess = observer((props) => {
         //     indexConversation
         //   );
         // }
-
+        console.log("new mess:", res);
         // AuthStore.socket?.emit(socketEvents.SEND_MESSAGE, res);
         setMessages([...messages, message]);
         setNewMessage('');

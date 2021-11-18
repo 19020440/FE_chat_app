@@ -4,13 +4,15 @@ import _ from 'lodash';
 import { loginStatuses, serviceUrls } from '../constants/configValues';
 
 export class AuthStore {
-  login = loginStatuses.LOGINED;
+  login = loginStatuses.ANONYMOUS;
   user = {};
+  stt = null
 
   constructor() {
     makeAutoObservable(this, {
       login: observable,
       user: observable,
+      stt: observable,
       action_login: action,
       action_register: action,
     });
@@ -40,7 +42,7 @@ export class AuthStore {
     const result = await Request.post(apiBody, apiUrl);
 
     if (result) {
-      this.user = result.content;
+      this.user = result.data;
       this.login = loginStatuses.LOGINED;
       sessionStorage.setItem('token', result.token);
       return true;

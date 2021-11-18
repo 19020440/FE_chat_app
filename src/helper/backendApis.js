@@ -1,16 +1,16 @@
 
-import { useStore } from '../hook';
 const { default: axios } = require('axios');
 const { serviceUrls } = require('../constants/configValues');
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const {ActionStore} = useStore('ActionStore')
-const getConversations = async (userId) => {
-  const apiUrl = `${serviceUrls.SERVICE_URL}/user/${userId}/conversations`;
+export const getConversations = async (userId) => {
+  const apiUrl = `${serviceUrls.SERVICE_URL}/conversation?userId=${userId}`;
   const result = await axios.get(apiUrl).then((resp) => resp.data);
-  
   return result;
 };
 
-module.exports = {
-  getConversations,
-};
+export const createNewMessege = async (urlBody) => {
+  const apiUrl = `${serviceUrls.SERVICE_URL}/message`;
+  const result = await axios.post(apiUrl, urlBody).then((resp) => resp.data);
+  return result;
+}
+
+

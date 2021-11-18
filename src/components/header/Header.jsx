@@ -25,10 +25,10 @@ const Header = observer((props) => {
   const history = useHistory();
 
   const { user } = AuthStore;
-  const countMess = countTextNotSeen(
-    ActionStore.conversations,
-    AuthStore.user?._id
-  );
+  // const countMess = countTextNotSeen(
+  //   ActionStore.conversations,
+  //   AuthStore.user?._id
+  // );
   const [visible, setVisible] = useState(false);
 
   const redirectToProfile = (e) => {
@@ -73,7 +73,7 @@ const Header = observer((props) => {
             className="sideBar-conversation sideBar-active-class"
             onClick={redirectToMessenger}>
             <FontAwesomeIcon icon={faFacebookMessenger} />
-            {countMess !== 0 && <span>{countMess}</span>}
+            {/* {countMess !== 0 && <span>{countMess}</span>} */}
           </Col>
 
           <Col span={24} className="sideBar-game">

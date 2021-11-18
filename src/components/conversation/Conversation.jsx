@@ -178,16 +178,14 @@ const Conversation = observer(() => {
                   <li
                     className="container-left__item"
                     onClick={async () => {
-                      // currentConversation.current = conversation?._id
-                      // await handlePassPage(conversation);
-                      // beforeConversation.current = conversation?._id;
+                       handlePassPage(conversation);
                     }}>
-                    <ProfileRight 
-                                        conversation={conversation} 
-                                        seen={conversation.lastText?.seens.filter(value => value.id == AuthStore.user._id)}
-                                        isGroup={_.size(conversation.members) > 2? true:false}
-                                        
-                                        />
+                      <ProfileRight 
+                        conversation={conversation} 
+                        seen={conversation.lastText?.seens.filter(value => value.id == AuthStore.user._id)}
+                        isGroup={_.size(conversation.members) > 2? true:false}
+                      
+                      />
                   </li>
                 </>
               );

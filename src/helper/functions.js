@@ -45,12 +45,12 @@ export const findIndexLastTextSeen = (data) => {
 };
 
 export const sortConversationByUpdateAt = (conversations) => {
-  const result = _.orderBy(
-    conversations.slice(),
-    [(obj) => new Date(obj.updatedAt)],
-    ['desc']
-  );
-  return result;
+  // const result = _.orderBy(
+  //   conversations.slice(),
+  //   [(obj) => new Date(obj.updatedAt)],
+  //   ['desc']
+  // );
+  return conversations;
 };
 
 // @author: manhthd, 2021 Nov 15
