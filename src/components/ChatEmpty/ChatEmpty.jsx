@@ -1,14 +1,13 @@
 import React from 'react';
-import WelcomePage from '../WelcomePage/WelcomePage';
-import './chatEmpty.css';
-import { Row } from 'antd';
-
+import StartMes from '../StartMess/StartMes'
+import './chatempty.css'
+import { Row, Col } from 'antd';
 function ChatEmpty(props) {
-  return (
-    <Row className="chat_empty">
-      <WelcomePage />
-    </Row>
-  );
+    return (
+        <Row className="chat_empty">
+           <StartMes />
+        </Row>
+    );
 }
 
 export default ChatEmpty;

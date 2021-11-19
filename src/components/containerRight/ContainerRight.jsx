@@ -202,7 +202,7 @@ const ContainerRight = observer(({infoRoom,members,messenger}) => {
     
     return (
         <>
-        <div className={`container-right`}>
+        <div className={`container-right${AuthStore.activeContainer?" active":""}`}>
                     <div className="container-right__head">
                         <div className="container-right__head-avt">
                             <img src={

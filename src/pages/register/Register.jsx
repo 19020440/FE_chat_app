@@ -1,47 +1,44 @@
-import { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import './register.css';
-import { useHistory } from 'react-router';
-import { observer } from 'mobx-react-lite';
-import { useStore } from '../../hook';
-import { routes } from '../../constants/routes';
-
-const Register = observer(() => {
+import axios from "axios";
+import { useRef } from "react";
+import {Link} from 'react-router-dom'
+import "./register.css";
+import { useHistory } from "react-router";
+import {observer} from 'mobx-react-lite';
+import {useStore} from '../../hook'
+ const Register = observer(() =>  {
   const username = useRef();
   const email = useRef();
   const password = useRef();
   const passwordAgain = useRef();
-
-  const AuthStore = useStore('AuthStore');
   const history = useHistory();
-  
+  const AuthStore = useStore('AuthStore');
+
   const handleClick = async (e) => {
     e.preventDefault();
     if (passwordAgain.current.value !== password.current.value) {
       passwordAgain.current.setCustomValidity("Passwords don't match!");
-      return;
-    } 
-
-    const user = {
-      username: username.current.value,
-      password: password.current.value,
-      email: email.current.value,
-    };
-    const result = await AuthStore.action_register(user);
-    result && history.push(routes.LOGIN);
+    } else {
+      const user = {
+        username: username.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      };
+      const result = await AuthStore.action_register(user);
+      result && history.push("/login");
+    }
   };
 
   return (
     <div className="login">
       <div className="loginWrapper">
         <div className="loginLeft">
-          <h3 className="loginLogo">DBMS ChatApp</h3>
+          <h3 className="loginLogo">Lamasocial</h3>
           <span className="loginDesc">
-            Connect with friends and the world around you.
+            Connect with friends and the world around you on Lamasocial.
           </span>
         </div>
         <div className="loginRight">
-          <form className="loginBox">
+          <form className="loginBox" onSubmit={handleClick}>
             <input
               placeholder="Username"
               required
@@ -69,19 +66,15 @@ const Register = observer(() => {
               ref={passwordAgain}
               className="loginInput"
               type="password"
-              minLength="6"
             />
-            <button className="loginButton" type="submit" onClick={handleClick}>
+            <button className="loginButton" type="submit">
               Sign Up
             </button>
+            <button className="loginRegisterButton"><Link to="/login">Log into Account</Link></button>
           </form>
-          <button className="loginRegisterButton">
-            <Link to="/login">Log into Account</Link>
-          </button>
         </div>
       </div>
     </div>
   );
 });
-
 export default Register;
