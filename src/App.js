@@ -27,12 +27,11 @@ const App = observer(() => {
   const [visible, setVisible] = useState(false);
   const AuthStore = useStore('AuthStore');
   const ActionStore = useStore('ActionStore');
-  const {user, login} = AuthStore;
+  const {login} = AuthStore;
   const from = useRef();
   const [userCall, setUserCall] = useState();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const signal = useRef();
-  const [createGroup, setCreateStatus] = useState(false);
+  const [createGroup, setCreateGroup] = useState(false);
   useEffect(() => {
     AuthStore.action_setSocket(socket)
     validLogin();
@@ -143,11 +142,14 @@ const App = observer(() => {
       if(!status) showMessageError("Tạo nhóm thất bại !");
       else {
         showMessageSuccess("Tạo nhóm thành công");
-        setCreateStatus(!createGroup)
+        setCreateGroup(!createGroup)
       }
     })
   
-   
+    AuthStore.socket.on("invite_success", status => {
+      status && setCreateGroup(!createGroup);
+    })
+
  },[]);
  
 
@@ -216,9 +218,6 @@ const App = observer(() => {
                   <span>{userCall?.username}</span>
                 </Col>
               </Row>
-              
-
-               
 
           </Modal>
           </>

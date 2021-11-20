@@ -5,6 +5,7 @@ import "./register.css";
 import { useHistory } from "react-router";
 import {observer} from 'mobx-react-lite';
 import {useStore} from '../../hook'
+import  {showMessageError} from '../../helper/function'
  const Register = observer(() =>  {
   const username = useRef();
   const email = useRef();
@@ -16,7 +17,7 @@ import {useStore} from '../../hook'
   const handleClick = async (e) => {
     e.preventDefault();
     if (passwordAgain.current.value !== password.current.value) {
-      passwordAgain.current.setCustomValidity("Passwords don't match!");
+      showMessageError("Mật khẩu không trùng nhau!")
     } else {
       const user = {
         username: username.current.value,

@@ -154,7 +154,7 @@ const Conversation = observer(() => {
       const res = await AuthStore.action_addFriend(true, userId._id);
       if(res) {
         const result = listUserAdd.map(user => {
-          console.log(user);
+          AuthStore.socket.emit("invite_success", userId._id)
             if(user._id == userId._id) user.seen = true;
             return user;
           })
