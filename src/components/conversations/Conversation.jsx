@@ -172,6 +172,7 @@ const Conversation = observer(() => {
       title="Thêm bạn bè"
       visible={visible}
       cancelText={<></>}
+      onCancel={handleCancelAdd}
       okText="Hủy"
       onOk={handleCancelAdd}
      >
