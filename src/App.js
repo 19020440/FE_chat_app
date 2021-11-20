@@ -11,7 +11,7 @@ import {  useEffect, useRef, useState } from "react";
 import{showMessageError, showMessageSuccess} from './helper/function'
 import {observer} from 'mobx-react-lite'
 import {useStore} from './hook'
-import Loading from "./components/Loading/Loading";
+import Loading from "./components/Loading";
 import PrRouter from "./pages/PrRouter";
 
 import _ from 'lodash';
