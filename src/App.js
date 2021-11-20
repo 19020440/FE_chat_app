@@ -168,7 +168,7 @@ const App = observer(() => {
    // accept call
    const handleOk = async () => {
     setVisible(false);
-    window.open(`http://localhost:3000/callvideo?from=${AuthStore.user?._id}&room=${from.current}&status=1`, "_blank")
+    window.open(`https://chat-app-group14.herokuapp.com/callvideo?from=${AuthStore.user?._id}&room=${from.current}&status=1`, "_blank")
     
   }
 

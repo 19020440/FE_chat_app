@@ -1,6 +1,6 @@
 export const CONFIG_URL = {
-  SERVICE_URL: "http://localhost:8800/api",
-  SERVICE_TEXT_FILE: "http://localhost:8800/images"
+  SERVICE_URL: process.env.SERVICE_URL || "https://chat-app-group14.herokuapp.com/api",
+  SERVICE_TEXT_FILE: "https://chat-app-group14.herokuapp.com/images"
 };
 
 export const LOCAL_STORGE = {
