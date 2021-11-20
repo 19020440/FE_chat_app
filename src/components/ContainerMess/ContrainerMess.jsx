@@ -14,7 +14,6 @@ import _ from 'lodash';
 import ContainerRight from '../containerRight/ContainerRight'
 import SearchMess from '../searchMess/searchMess'
 import UploadFile from '../UploadFile/UploadFile';
-import { format } from "timeago.js";
 import './containermess.css'
 import Gifphy from '../Gifphy/Gifphy';
 import Emoji from '../Emoji/Emoji';
