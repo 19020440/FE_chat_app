@@ -1,10 +1,9 @@
 import React from 'react';
 import StartMes from '../StartMess/StartMes'
-import './chatempty.css'
-import { Row, Col } from 'antd';
+import { Row } from 'antd';
 function ChatEmpty(props) {
     return (
-        <Row className="chat_empty">
+        <Row className="chat_empty" style={{width: '100%', height: '100%'}}>
            <StartMes />
         </Row>
     );
