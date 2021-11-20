@@ -1,16 +1,13 @@
-import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
 import { Modal, Row, Col } from "antd";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
   
 } from "react-router-dom";
-import {  useEffect, useLayoutEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import{showMessageError, showMessageSuccess} from './helper/function'
 import {observer} from 'mobx-react-lite'
 import {useStore} from './hook'
@@ -25,7 +22,7 @@ import { faCheckSquare, faCoffee,faBell, faEllipsisH, faCaretDown, faSun, faMoon
 import CallVideo from "./components/CallVideo/CallVideo";
 import Camera from "./components/camera/Camera";
 library.add( fab,faCheckSquare, faCoffee,faBell, faEllipsisH,faCaretDown,faSun,faMoon,faPhone,faInfoCircle,faPlusCircle) 
-const socket = io.connect("http://localhost:8800");
+const socket = io.connect("https://chat-app-group14.herokuapp.com");
 const App = observer(() => {
   const [visible, setVisible] = useState(false);
   const AuthStore = useStore('AuthStore');
@@ -168,7 +165,7 @@ const App = observer(() => {
    // accept call
    const handleOk = async () => {
     setVisible(false);
-    window.open(`https://chat-app-group14.herokuapp.com/callvideo?from=${AuthStore.user?._id}&room=${from.current}&status=1`, "_blank")
+    window.open(`/callvideo?from=${AuthStore.user?._id}&room=${from.current}&status=1`, "_blank")
     
   }
 
