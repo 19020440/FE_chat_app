@@ -176,21 +176,7 @@ const App = observer(() => {
  }
   return (
     <>
-    {/* <Router> */}
       <Switch>
-        {/* <Route exact path="/">
-          {login ? <Home /> : <Register />}
-        </Route>
-        <Route path="/login">{login ? <Redirect to="/" /> : <Login />}</Route>
-        <Route path="/register">
-          {login ? <Redirect to="/" /> : <Register />}
-        </Route>
-        <Route path="/messenger">
-          {!login ? <Redirect to="/" /> : <Messenger />}
-        </Route>
-        <Route path="/profile/:_id">
-          <Profile />
-        </Route> */}
 
         <Route path="/login">{login == 1 ? <Redirect to="/" /> : <Login />}</Route>
         <Route path="/register">

@@ -171,7 +171,9 @@ const Conversation = observer(() => {
      <Modal
       title="Thêm bạn bè"
       visible={visible}
-      onCancel={handleCancelAdd}
+      cancelText={<></>}
+      okText="Hủy"
+      onOk={handleCancelAdd}
      >
           <div className="main-modal_showGroup">
             

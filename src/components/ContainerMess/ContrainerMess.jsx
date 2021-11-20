@@ -152,7 +152,7 @@ const ContrainerMess = observer((props) => {
       },[AuthStore.textGif])
       /// call video
       const handleCallVideo =  () => {
-        window.open(`https://chat-app-group14.herokuapp.com/callvideo?from=${user._id}&room=${conversationId}&status=${0}`)
+        window.open(`/callvideo?from=${user._id}&room=${conversationId}&status=${0}`)
       }
 
       // Files
