@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import {People,MoreHoriz} from '@material-ui/icons'
+import { showMessageInfo, showMessageSuccess } from '../../helper/function';
 import { faChevronUp, faBell, faChevronDown, faBan, faUserSlash, faDotCircle, faThumbsUp, faFont, faSearch, faWrench, faCheck, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 library.add(fab, faChevronDown, faChevronUp,faBell,faUserSlash,faWrench,faCheck,faSignOutAlt) 
 const ContainerRight = observer(({infoRoom,members,messenger}) => {
@@ -150,7 +151,7 @@ const ContainerRight = observer(({infoRoom,members,messenger}) => {
         setLeaveGroup(false);
     }
     const handleLeaveGroup =(e) => {
-        ActionStore.action_changePropertyConversation('leave',conversationId);
+        ActionStore.action_changePropertyConversation('leave',conversationId, AuthStore.user._id);
         history.push('/messenger')
     }   
      
@@ -170,6 +171,18 @@ const ContainerRight = observer(({infoRoom,members,messenger}) => {
         const handleCancelMembers = () => {
             setModalMember(false);
         }
+
+        const handleDeleteUser = async (value) => {
+            if(value.isAdmin && value.id == AuthStore.user._id) {
+                const result = await ActionStore.action_deleteUserGroup(conversationId,value.id);
+                if(result) showMessageSuccess("Xoá thành công thành viên ra khỏi nhóm!")
+                else showMessageInfo("Xóa thành viên thất bại!")
+            } 
+            else  {
+              
+                showMessageInfo("Chỉ có quản trị viên mới có quyền xóa thành viên !");
+            }
+        }
         return (
             <Modal title="Thành viên" visible={isModalVisible}  
                 onCancel={handleCancelMembers} 
@@ -185,11 +198,11 @@ const ContainerRight = observer(({infoRoom,members,messenger}) => {
                                     <img src={value.profilePicture} style={{borderRadius: "50px"}}/>
                                     <div >
                                         <span style={{marginLeft: "10px",fontWeight: "550"}}>{value.username}</span>
-                                        <p style={{marginLeft: "10px",fontWeight: "500",color: "#cec3c3",fontSize: "12px"}}>Quản trị viên</p>
+                                        {value.isAdmin && <p style={{marginLeft: "10px",fontWeight: "500",color: "#cec3c3",fontSize: "12px"}}>Quản trị viên</p>}
                                     </div>
-                                   
+                                
                                 </div>
-                                <Popover placement="bottom"  content={<><p>Xóa khỏi nhóm</p></>} trigger="click">
+                                <Popover placement="bottom"  content={<><p onClick={() => handleDeleteUser(value)}>Xóa khỏi nhóm</p></>} trigger="click">
                                     <MoreHoriz style={{fontSize: "20px"}}/>
                                 </Popover>
                             </Col>

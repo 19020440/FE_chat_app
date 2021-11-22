@@ -47,7 +47,7 @@ const ContrainerMess = observer((props) => {
     //set ProfileFriend
     useEffect(() => {
       if(!_.isEmpty(currentConversation)) {
-        const sizeUserInRoom = _.size(currentConversation.members) > 2 ? true:false;
+        const sizeUserInRoom = currentConversation.name ? true:false;
         
         if(sizeUserInRoom) {
           const status = _.size(currentConversation.members.filter(value => value.id != AuthStore.user._id && value.status)) >=1 ? true : false;

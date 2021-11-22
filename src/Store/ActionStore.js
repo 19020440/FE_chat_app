@@ -59,7 +59,20 @@ export class ActionStore {
             action_resetListSearchFriend: action,
             action_changePropertyConversation: action,
             action_resetAllData:action,
+            action_deleteUserGroup: action
         })
+    }
+    //action_deleteUserGroup
+
+    async action_deleteUserGroup(covId, userId) {
+        const DOMAIN = `${CONFIG_URL.SERVICE_URL}/${WsCode.leaveGroup}`
+        const urlBody = {
+            covId,
+            userId
+        } 
+        const result = await Request.post(urlBody, DOMAIN);
+        if(result) return true;
+        else return false;
     }
     //Restet All DAta 
     action_resetAllData() {
@@ -108,9 +121,18 @@ export class ActionStore {
             }
 
             case 'leave': {
-                _.remove(this.conversations, function (value)  {
-                    return value._id  == covId;
-                })
+                const DOMAIN = `${CONFIG_URL.SERVICE_URL}/${WsCode.leaveGroup}`
+                const urlBody = {
+                    covId,
+                    userId: data,
+                } 
+                const result = await Request.post(urlBody, DOMAIN);
+                if(result) {
+                    _.remove(this.conversations, function (value)  {
+                        return value._id  == covId;
+                    })
+                }
+               
                 break;
             }
             default: break;

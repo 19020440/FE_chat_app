@@ -637,7 +637,7 @@ footer span:hover {
   overflow-y: auto;
   list-style: none;
   padding: 4px;
-  height: 400px;
+  height: 600px;
 }
 
 .container-left__list::-webkit-scrollbar {
