@@ -218,7 +218,7 @@ const ContrainerMess = observer((props) => {
       if(!_.isEmpty(currentConversation)) {
       handleJoinRoom(currentConversation);
       }
-    },[currentConversation])
+    },[conversationId])
 
   const handleJoinRoom = async (conversation) => {
     try {
