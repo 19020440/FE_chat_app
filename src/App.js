@@ -141,6 +141,13 @@ const App = observer(() => {
     AuthStore.socket.on("invite_to_group", status => {
       if(!status) showMessageError("Tạo nhóm thất bại !");
       else {
+        setCreateGroup(!createGroup)
+      }
+    })
+
+    AuthStore.socket.on("status_invite_to_group", status => {
+      if(!status) showMessageError("Tạo nhóm thất bại !");
+      else {
         showMessageSuccess("Tạo nhóm thành công");
         setCreateGroup(!createGroup)
       }
